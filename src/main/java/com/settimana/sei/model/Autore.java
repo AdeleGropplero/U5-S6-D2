@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public class Autore {
     private static int count = 1;
-    private long id;
+    private long id = count ++;
     private String nome;
     private String cognome;
     private String email;
@@ -16,7 +16,7 @@ public class Autore {
     private String avatar; //https://ui-avatars.com/api/?name=Mario+Rossi
 
     public Autore(String nome, String cognome, String email, LocalDate dataNascita) {
-        this.id = count++;
+        //this.id = count++;
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
@@ -81,5 +81,17 @@ public class Autore {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public String toString() {
+        return "\n \nAutore{" +
+                "\nid= " + id + '\n' +
+                "nome= " + nome + '\n' +
+                "cognome= " + cognome + '\n' +
+                "email= " + email + '\n' +
+                "dataNascita= " + dataNascita + '\n' +
+                "avatar= " + avatar + '\n' +
+                '}';
     }
 }

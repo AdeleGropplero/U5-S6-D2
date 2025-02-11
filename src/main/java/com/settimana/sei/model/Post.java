@@ -12,7 +12,9 @@ public class Post {
     private String titolo;
     private String cover;
     private String contenuto;
-    private int tempoDiLettura;
+    private Integer tempoDiLettura;
+
+    //private Autore autore;
 
     public Post(String categoria, String titolo, String contenuto, int tempoDiLettura) {
        // this.id = count++;
@@ -84,13 +86,13 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", categoria='" + categoria + '\'' +
-                ", titolo='" + titolo + '\'' +
-                ", cover='" + cover + '\'' +
-                ", contenuto='" + contenuto + '\'' +
-                ", tempoDiLettura=" + tempoDiLettura +
+        return "\n \nPost{" +
+                "\nid= " + id + '\n' +
+                "categoria= " + categoria + '\n' +
+                "titolo= " + titolo + '\n' +
+                "cover= " + cover + '\n' +
+                "contenuto= " + contenuto + '\n' +
+                "tempoDiLettura= " + tempoDiLettura +
                 '}';
     }
 }
