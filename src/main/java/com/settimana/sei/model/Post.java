@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 public class Post {
     private static int count = 1;
-    private long id;
+    private long id = count ++;
     private String categoria;
     private String titolo;
     private String cover;
@@ -15,12 +15,15 @@ public class Post {
     private int tempoDiLettura;
 
     public Post(String categoria, String titolo, String contenuto, int tempoDiLettura) {
-        this.id = count++;
+       // this.id = count++;
         this.categoria = categoria;
         this.titolo = titolo;
         this.cover = "https://picsum.photos/200/300";
         this.contenuto = contenuto;
         this.tempoDiLettura = tempoDiLettura;
+    }
+
+    public Post() {
     }
 
     public static int getCount() {
@@ -77,5 +80,17 @@ public class Post {
 
     public void setTempoDiLettura(int tempoDiLettura) {
         this.tempoDiLettura = tempoDiLettura;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", categoria='" + categoria + '\'' +
+                ", titolo='" + titolo + '\'' +
+                ", cover='" + cover + '\'' +
+                ", contenuto='" + contenuto + '\'' +
+                ", tempoDiLettura=" + tempoDiLettura +
+                '}';
     }
 }

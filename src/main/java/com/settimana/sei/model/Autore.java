@@ -24,6 +24,9 @@ public class Autore {
         this.avatar = "https://ui-avatars.com/api/?name=" + nome + "+" + cognome;
     }
 
+    public Autore() {
+    }
+
     public static int getCount() {
         return count;
     }
