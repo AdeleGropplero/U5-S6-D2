@@ -1,5 +1,6 @@
 package com.settimana.sei.controller;
 
+import com.settimana.sei.Service.PostService;
 import com.settimana.sei.model.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -7,23 +8,27 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController //non necessita di @ResponseBody, da usare da ora in avanti
 @RequestMapping("/post")
 public class PostController {
+    @Autowired
+    private PostService postService;
 
-    private List<Post> posts = new ArrayList<>();
+//    private List<Post> posts = new ArrayList<>();
 
     @GetMapping(value = "")
-    public List<Post> getAllPost(){
-        return posts;
+    public List<Post> getAllPost() {
+        return /*posts*/ postService.getAllPost();
     }
 
     // POSTMAN --> http://localhost:8080/post/nuovoPost
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public String nuovoPost(@RequestBody Post post){
-        posts.add(post);
+    public String nuovoPost(@RequestBody Post post) {
+        // posts.add(post);
+        postService.insertPost(post);
         return "Post Aggiunto con successo\n" + post;
     }
 
@@ -31,21 +36,26 @@ public class PostController {
     @GetMapping(value = "/{id}", produces = "application/json")
     public Post getIdPost(@PathVariable Long id) {
         // Cerca il post con l'ID
-        Post post = posts.stream()
+/*        Post post = posts.stream()
                 .filter(p -> p.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElse(null);*/
+       /* Post post = postService.getAllPost().stream().filter(p -> p.getId() == id)
+                .findFirst()
+                .orElse(null);*/
+        Optional<Post> post = postService.getById(id);
 
         return post;  // Ritorna direttamente il post
     }
 
     @PutMapping("/{id}")
-    public Post updateById(@PathVariable Long id, @RequestBody Post updatePost){
-        Post post = posts.stream().filter(p -> p.getId() == id ).findFirst().orElse(null);
+    public Post updateById(@PathVariable Long id, @RequestBody Post updatePost) {
+        /*Post post = posts.stream().filter(p -> p.getId() == id).findFirst().orElse(null);*/
         /*post.setCategoria(updatePost.getCategoria());
         post.setTitolo(updatePost.getTitolo());
         post.setContenuto(updatePost.getContenuto());
         post.setTempoDiLettura(updatePost.getTempoDiLettura());*/
+        Optional<Post> post = postService.getById(id);
 
         if (post == null) {
             throw new RuntimeException("Post con ID " + id + " non trovato"); // Oppure usa un'eccezione personalizzata
@@ -53,7 +63,7 @@ public class PostController {
 
         // Aggiorna solo i campi non nulli
         if (updatePost.getCategoria() != null) {
-            post.setCategoria(updatePost.getCategoria());
+            post. (updatePost.getCategoria());
         }
         if (updatePost.getTitolo() != null) {
             post.setTitolo(updatePost.getTitolo());
@@ -69,8 +79,8 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public String deletePost(@PathVariable Long id){
-        Post post = posts.stream().filter(p -> p.getId() == id ).findFirst().orElse(null);
+    public String deletePost(@PathVariable Long id) {
+        Post post = posts.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
         posts.remove(post);
         return "Post rimosso con successo. \nElemento rimosso: \n" + post;
     }

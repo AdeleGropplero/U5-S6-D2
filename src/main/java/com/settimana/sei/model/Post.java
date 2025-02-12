@@ -1,87 +1,36 @@
 package com.settimana.sei.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-
-@Component
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Entity
+@Table(name = "posts")
 public class Post {
-    private static int count = 1;
-    private long id = count ++;
+    @Id
+    @GeneratedValue
+    private long id;
     private String categoria;
     private String titolo;
     private String cover;
     private String contenuto;
     private Integer tempoDiLettura;
+    @ManyToOne
+    @JoinColumn(name = "autore_id")
+    private Autore autore;
 
-    //private Autore autore;
-
-    public Post(String categoria, String titolo, String contenuto, Integer tempoDiLettura) {
-       // this.id = count++;
+    public Post(String categoria, String titolo, String contenuto, Integer tempoDiLettura, Autore autore) {
         this.categoria = categoria;
         this.titolo = titolo;
         this.cover = "https://picsum.photos/200/300";
         this.contenuto = contenuto;
         this.tempoDiLettura = tempoDiLettura;
-    }
-
-    public Post() {
-    }
-
-    public static int getCount() {
-        return count;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public String getTitolo() {
-        return titolo;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public String getContenuto() {
-        return contenuto;
-    }
-
-    public Integer getTempoDiLettura() {
-        return tempoDiLettura;
-    }
-
-    public static void setCount(int count) {
-        Post.count = count;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public void setTitolo(String titolo) {
-        this.titolo = titolo;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public void setContenuto(String contenuto) {
-        this.contenuto = contenuto;
-    }
-
-    public void setTempoDiLettura(Integer tempoDiLettura) {
-        this.tempoDiLettura = tempoDiLettura;
+        this.autore = autore;
     }
 
     @Override
