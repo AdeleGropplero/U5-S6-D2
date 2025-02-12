@@ -1,7 +1,9 @@
 package com.settimana.sei.controller;
 
+import com.settimana.sei.Service.AutoreService;
 import com.settimana.sei.model.Autore;
 import com.settimana.sei.model.Post;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,58 +14,53 @@ import java.util.List;
 @RestController //non necessita di @ResponseBody, da usare da ora in avanti
 @RequestMapping("/autori")
 public class AutoreController {
+    @Autowired
+    private AutoreService autoreService;
 
-    private List<Autore> autori = new ArrayList<>();
+   // private List<Autore> autori = new ArrayList<>();
 
 //    public static int id = 1; in alternativa al farlo nella classe.
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public String inserisciAutore(@RequestBody Autore autore){
-        String nome = autore.getNome();
-        String cognome = autore.getCognome();
-        String email = autore.getEmail();
-        LocalDate dataDiNascita = autore.getDataNascita();
-        autori.add(autore);
+    public String inserisciAutore(@RequestBody Autore newAutore){
+        String nome = newAutore.getNome();
+        String cognome = newAutore.getCognome();
+        String email = newAutore.getEmail();
+        LocalDate dataDiNascita = newAutore.getDataNascita();
 
+        autoreService.insertAutore(newAutore);
+        //autori.add(autore);
 //        autore.setId(id);
 //        id++;
-        return "Autore aggiunto con successo\n" + autore;
+        return "Autore aggiunto con successo\n" + newAutore;
     }
 
     @PostMapping("/autoriMultipli")
     @ResponseStatus(HttpStatus.CREATED)
     public String autoriMultipli(@RequestBody List<Autore> newAutori) {
-        autori.addAll(newAutori);
+       autoreService.AddAll(newAutori);
+        // autori.addAll(newAutori);
         return "Post Aggiunti con successo\n" + newAutori + "\n";
     }
 
     @GetMapping(value = "")
     public List<Autore> getAllAutori(){
-        return autori;
+        return /*autori*/ autoreService.getAllAutore();
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
     public Autore getAutore(@PathVariable Long id) {
         // Cerca l'autore con l'ID
-        Autore autore = autori.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
+        //Autore autore = autori.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
 
-        return autore;  // Ritorna direttamente il autore
+        return /*autore*/ autoreService.getById(id).orElseThrow(() -> new RuntimeException("Autore con ID " + id + " non trovato"));  // Ritorna direttamente il autore
     }
 
     @PutMapping("/{id}")
     public Autore updateById(@PathVariable Long id, @RequestBody Autore updateAutore){
-        Autore autore = autori.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
-
-        if (autore == null) {
-            throw new RuntimeException("Autore con ID " + id + " non trovato"); // Oppure un'eccezione personalizzata
-        }
+        //Autore autore = autori.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
+        Autore autore = autoreService.getById(id).orElseThrow(() -> new RuntimeException("Autore con ID " + id + " non trovato"));
 
         // Aggiorna solo i campi non nulli
         if (updateAutore.getNome() != null) {
@@ -88,9 +85,10 @@ public class AutoreController {
 
     @DeleteMapping("/{id}")
     public String deletePost(@PathVariable Long id){
-        Autore autore = autori.stream().filter(p -> p.getId() == id ).findFirst().orElse(null);
-        autori.remove(autore);
-        return "Post rimosso con successo. \nElemento rimosso: \n" + autore;
+        //Autore autore = autori.stream().filter(p -> p.getId() == id ).findFirst().orElse(null);
+       // autori.remove(autore);
+        autoreService.deleteAutore(id);
+        return "Autore rimosso con successo. \nElemento rimosso: \n" + id;
     }
 
 

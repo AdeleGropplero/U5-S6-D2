@@ -3,8 +3,12 @@ package com.settimana.sei.controller;
 import com.settimana.sei.Service.PostService;
 import com.settimana.sei.model.Post;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +22,14 @@ public class PostController {
 
 //    private List<Post> posts = new ArrayList<>();
 
-    @GetMapping(value = "")
-    public List<Post> getAllPost() {
-        return /*posts*/ postService.getAllPost();
+    /*    @GetMapping(value = "")
+        public List<Post> getAllPost() {
+            return *//*posts*//* postService.getAllPost();
+    }*/
+// con pageable
+    @GetMapping
+    public Page<Post> getAllPost(Pageable pageable) {
+        return postService.getAllPost(pageable);
     }
 
     // POSTMAN --> http://localhost:8080/post/nuovoPost
@@ -43,7 +52,8 @@ public class PostController {
        /* Post post = postService.getAllPost().stream().filter(p -> p.getId() == id)
                 .findFirst()
                 .orElse(null);*/
-        Optional<Post> post = postService.getById(id);
+        Post post = postService.getById(id)
+                .orElseThrow(() -> new RuntimeException("Post con ID " + id + " non trovato"));
 
         return post;  // Ritorna direttamente il post
     }
@@ -55,15 +65,13 @@ public class PostController {
         post.setTitolo(updatePost.getTitolo());
         post.setContenuto(updatePost.getContenuto());
         post.setTempoDiLettura(updatePost.getTempoDiLettura());*/
-        Optional<Post> post = postService.getById(id);
+        Post post = postService.getById(id)
+                .orElseThrow(() -> new RuntimeException("Post con ID " + id + " non trovato"));
 
-        if (post == null) {
-            throw new RuntimeException("Post con ID " + id + " non trovato"); // Oppure usa un'eccezione personalizzata
-        }
 
         // Aggiorna solo i campi non nulli
         if (updatePost.getCategoria() != null) {
-            post. (updatePost.getCategoria());
+            post.setCategoria(updatePost.getCategoria());
         }
         if (updatePost.getTitolo() != null) {
             post.setTitolo(updatePost.getTitolo());
@@ -78,17 +86,27 @@ public class PostController {
         return post;  // Restituisco il post aggiornato
     }
 
-    @DeleteMapping("/{id}")
+/*    @DeleteMapping("/{id}")
     public String deletePost(@PathVariable Long id) {
         Post post = posts.stream().filter(p -> p.getId() == id).findFirst().orElse(null);
         posts.remove(post);
         return "Post rimosso con successo. \nElemento rimosso: \n" + post;
+    }*/
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable Long id) {
+        Post post = postService.getById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post con ID " + id + " non trovato"));
+
+        postService.deletePost(id);
+
+        return ResponseEntity.ok("Post rimosso con successo: \n" + post);
     }
 
     @PostMapping("/postMultipli")
     @ResponseStatus(HttpStatus.CREATED)
     public String postMultipli(@RequestBody List<Post> newPosts) {
-        posts.addAll(newPosts);  // Aggiunge tutti i post ricevuti alla lista esistente
+        postService.AddAll(newPosts);  // Aggiunge tutti i post ricevuti alla lista esistente
         return "Post Aggiunti con successo\n" + newPosts + "\n";
     }
 
