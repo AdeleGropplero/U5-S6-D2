@@ -16,7 +16,7 @@ public class Post {
 
     //private Autore autore;
 
-    public Post(String categoria, String titolo, String contenuto, int tempoDiLettura) {
+    public Post(String categoria, String titolo, String contenuto, Integer tempoDiLettura) {
        // this.id = count++;
         this.categoria = categoria;
         this.titolo = titolo;
@@ -52,7 +52,7 @@ public class Post {
         return contenuto;
     }
 
-    public int getTempoDiLettura() {
+    public Integer getTempoDiLettura() {
         return tempoDiLettura;
     }
 
@@ -80,7 +80,7 @@ public class Post {
         this.contenuto = contenuto;
     }
 
-    public void setTempoDiLettura(int tempoDiLettura) {
+    public void setTempoDiLettura(Integer tempoDiLettura) {
         this.tempoDiLettura = tempoDiLettura;
     }
 

@@ -78,7 +78,7 @@ public class AutoreController {
         if (updateAutore.getDataNascita() != null) {
             autore.setDataNascita(updateAutore.getDataNascita());
         }
-/*        autore.setNome(updateAutore.getNome());
+       /*autore.setNome(updateAutore.getNome());
         autore.setCognome(updateAutore.getCognome());
         autore.setEmail(updateAutore.getEmail());
         autore.setDataNascita(updateAutore.getDataNascita());*/

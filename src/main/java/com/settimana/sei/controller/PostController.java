@@ -42,6 +42,10 @@ public class PostController {
     @PutMapping("/{id}")
     public Post updateById(@PathVariable Long id, @RequestBody Post updatePost){
         Post post = posts.stream().filter(p -> p.getId() == id ).findFirst().orElse(null);
+        /*post.setCategoria(updatePost.getCategoria());
+        post.setTitolo(updatePost.getTitolo());
+        post.setContenuto(updatePost.getContenuto());
+        post.setTempoDiLettura(updatePost.getTempoDiLettura());*/
 
         if (post == null) {
             throw new RuntimeException("Post con ID " + id + " non trovato"); // Oppure usa un'eccezione personalizzata
@@ -57,14 +61,9 @@ public class PostController {
         if (updatePost.getContenuto() != null) {
             post.setContenuto(updatePost.getContenuto());
         }
-        if (updatePost.getTempoDiLettura() > 0) {
+        if (updatePost.getTempoDiLettura() != null) {
             post.setTempoDiLettura(updatePost.getTempoDiLettura());
         }
-
-/*        post.setCategoria(updatePost.getCategoria());
-        post.setTitolo(updatePost.getTitolo());
-        post.setContenuto(updatePost.getContenuto());
-        post.setTempoDiLettura(updatePost.getTempoDiLettura());*/
 
         return post;  // Restituisco il post aggiornato
     }
